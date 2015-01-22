@@ -51,7 +51,7 @@ local mod = {
 		return {
 			instance = lastinst,
 			func = function()
-				-- Extract max volume and current volume (native units, not percentages) from amixer
+				-- Extract max, min, current volume (as native units, not percentages)
 				-- TODO Don't ignore min volume
 				local f = io.popen("amixer get \""..item.."\"")
 				local min, max, vol, mutestr
@@ -105,9 +105,38 @@ local mod = {
 				util.print(str, color, false)
 				util.print(postfix)
 			end,
-			clickevent = function(...)
-				-- Toggle mute on click
-				os.execute("amixer set \""..item.."\" toggle > /dev/null 2>&1")
+			clickevent = function(e)
+				--[[
+
+				Mouse button codes:
+				1 - Left
+				2 - Middle
+				3 - Right
+				4 - Wheel up
+				5 - Wheel down
+
+				8 - Back
+				9 - Forward
+
+				]]
+
+				local btntbl = {
+					[1] = function()
+						-- Toggle mute on left click
+						os.execute("amixer -q set \""..item.."\" toggle")
+					end,
+					[4] = function()
+						-- Increase volume when scrolling up
+						os.execute("amixer -q set \""..item.."\" 5%+ unmute")
+					end,
+					[5] = function()
+						-- Decrease volume when scrolling down
+						os.execute("amixer -q set \""..item.."\" 5%- unmute")
+					end,
+				}
+
+				local fn = btntbl[e.button]
+				if fn then fn() end
 			end,
 		}
 	end,

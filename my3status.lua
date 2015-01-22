@@ -59,7 +59,11 @@ local function handleinput()
 			value = value:match("\"(.*)\"")
 			assert(value)
 			value = util.jsonunescape(value)
+		else
+			-- Assume number
+			value = tonumber(value)
 		end
+		assert(value)
 
 		obj[key] = value
 	end

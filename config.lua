@@ -1,3 +1,4 @@
+local util = require("my3util")
 local volume = require("my3volume")
 local datetime = require("my3datetime")
 local cpu = require("my3cpu")
@@ -9,13 +10,15 @@ return {
     util.format(text, color, separator, urgent) - for example:
     util.format("I'm red", util.colors.red)
 
+    Some modules take (optional) parameters. Look into the module file for information.
+
     ]]
     STATUS_CFG = {
     	cpu.new(),
     	volume.new(),
     	datetime.new("%A, %d.%m.%Y %X"),
     },
-    
+
     -- Delay in seconds between prints. Sub-second values are allowed.
     DELAY = 0.5,
 
