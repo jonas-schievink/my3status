@@ -16,40 +16,15 @@ local poll = require("posix.poll")
 -- (like i3status)
 sig.signal(sig.SIGUSR1, function() end)
 
--- Hack required to allow loading modules from ~/.i3 (which isn't the working dir when running
--- with i3bar). FIXME
+-- Hack required to allow loading modules from ~/.i3/my3status/ (which isn't the working dir when
+-- running with i3bar). FIXME
 package.path = package.path..";"..os.getenv("HOME").."/.i3/my3status/?.lua"
 
-
------------------------------------
------- Configuration Options ------
------------------------------------
-
--- Delay in seconds between prints. Sub-second values are allowed.
-local DELAY = 0.5
-
--- Set this to false to disable colored output
-local ALLOW_COLOR = true
-
+-- Load my3util and the user config from the "hacked" path
 local util = require("my3util")
-local volume = require("my3volume")
-local datetime = require("my3datetime")
-local cpu = require("my3cpu")
+local config = require("config")
 
-util.setcolor(ALLOW_COLOR)
-
--- Status line configuration. Each item must be a loaded module for my3status
--- or a string that will be printed as-is (supports JSON).
-local statusline = {
-	cpu.new(),
-	volume.new({
-		prefix = "🔊 [",
-		postfix = "]",
-		muteprefix = "🔇 [",
-	}),
-	datetime.new("%A, %d.%m.%Y %X"),
-}
-
+util.setcolor(config.ALLOW_COLOR)
 
 -- We need at least Lua 5.2
 --
@@ -104,7 +79,6 @@ end
 -- Main function. Starts sending JSON data to i3bar and queries all modules in a loop, building the
 -- status line as configured
 local function run()
-	io.stdout:setvbuf("no")
 	print('{"version":1, "click_events":true}')
 	print("[[],")
 
@@ -137,7 +111,7 @@ local function run()
 		util.printraw("[")
 		util.printraw('{"full_text":"","separator":false,"separator_block_width":0}')
 
-		for i, elem in ipairs(statusline) do
+		for i, elem in ipairs(config.STATUS_CFG) do
 			-- Output all configured status line elements
 			local ty = type(elem)
 			local f = typedispatch[ty]
@@ -148,7 +122,7 @@ local function run()
 		util.printraw("],\n")
 		util.flush()
 
-		local res = poll.rpoll(0, DELAY * 1000)
+		local res = poll.rpoll(0, config.DELAY * 1000)
 		if res == 1 then
 			-- i3bar sent an event
 			handleinput()
