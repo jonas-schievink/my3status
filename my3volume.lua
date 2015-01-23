@@ -3,7 +3,6 @@
 
 local util = require("my3util")
 
-local lastinst = -1
 local mod = {
 	--[[
 
@@ -47,9 +46,8 @@ local mod = {
 
 		cfg = nil
 
-		lastinst = lastinst + 1
 		return {
-			instance = lastinst,
+			instance = util.geninst(),
 			func = function()
 				-- Extract max, min, current volume (as native units, not percentages)
 				-- TODO Don't ignore min volume
