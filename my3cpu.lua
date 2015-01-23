@@ -6,8 +6,9 @@ local mod = {
     --[[
 
     Parameters:
-    * prefix: Text to print before the value
-    * postfix: Text to print after the value
+    * prefix: Text to print before the percentage. Defaults to "CPU: "
+    * postfix: Text to print after the percentage. Defaults to ""
+    * colors: Color table to use to color the percentage
 
     ]]
     new = function(cfg)
@@ -32,7 +33,7 @@ local mod = {
             f:close()
 
             local values = {line:match("cpu  (%d+) (%d+) (%d+) (%d+) (%d+) (%d+) (%d+)")}
-            if values == nil then error("Unexcpected /proc/stat output") end
+            if values == nil then error("Unexpected /proc/stat output") end
 
             if last == nil then last = values end
 
