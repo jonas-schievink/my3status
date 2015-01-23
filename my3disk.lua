@@ -22,9 +22,25 @@ local function fmtspace(kbytes, decimals)
     end
 
     kbytes = string.format("%."..decimals.."f", kbytes)
-    kbytes = kbytes.." "..spaceunits[unit]
+    kbytes = kbytes.." "..spaceunits[unit].."iB"
 
     return kbytes
+end
+
+local function querydisk(path)
+    local f = io.popen("df '"..path.."'", "r")
+
+    f:read("*l")    -- dispose header
+    local line = f:read("*l")
+
+    local total, used, avail = line:match(".* (%d+)%s+(%d+)%s+(%d+)%s+%d+%%%s+")
+    assert(total, "Unexpected `df` output")
+
+    total = tonumber(total)
+    used = tonumber(used)
+    avail = tonumber(avail)
+
+    return total, used, avail
 end
 
 return {
@@ -55,20 +71,13 @@ return {
 
         return function()
             -- Query filesystem by running `df`
-            local f = io.popen("df '"..path.."'", "r")
-
-            f:read("*l")    -- dispose header
-            local line = f:read("*l")
-
-            local total, used, avail = line:match(".* (%d+)%s+(%d+)%s+(%d+)%s+%d+%%%s+")
-            assert(total, "Unexpected `df` output")
-
-            total = tonumber(total)
-            used = tonumber(used)
-            avail = tonumber(avail)
+            local total, used, avail = querydisk(path)
 
             local rawstr = formatter(total, used, avail)
             util.printraw(rawstr)
         end
     end,
+
+    -- Export "querydisk" function
+    querydisk = querydisk,
 }
