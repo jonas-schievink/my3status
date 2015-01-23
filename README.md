@@ -18,6 +18,14 @@ The builtin `my3volume` module is an example of this: You can toggle mute by cli
 
 Written in Lua, `my3status` enables its users to easily extend it with custom modules. Changes can be easily tested: Just reload i3. If debugging output is required, you can just run `./my3status.lua` and have it output JSON and debugging info to the terminal.
 
+## Force Update
+
+Like `i3status`, you can force `my3status` to update itself by sending it the `USR1` signal. Execute this in your shell:
+
+    pkill -USR1 -f 'lua.*my3status.lua'
+
+Because the executing process is not `my3status.lua`, but the system's `lua`, we have to use `pkill` to match correctly. You *could* just use `killall -USR1 lua`, but that would send SIGUSR1 to all lua processes and because the default action is to terminate the program, this could end badly.
+
 # Installation
 
 Make sure Lua 5.2 is installed. Run `lua -v` to see your version.

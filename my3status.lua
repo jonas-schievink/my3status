@@ -32,6 +32,7 @@ util.setcolor(config.ALLOW_COLOR)
 assert(_VERSION == "Lua 5.2")
 
 
+-- Maps instance IDs to instantiated module tables. For use with click events.
 local instancemap = {}
 
 local hasinput = false -- set to true after first line was read
@@ -52,7 +53,7 @@ local function handleinput()
 	assert(inner)
 
 	local obj = {}
-	-- Parse JSON object fields  (with this self-explainatory thingy)
+	-- Parse JSON object fields  (with this self-explainatory pattern)
 	for key, value in line:gmatch('"(%a+)":([^,}]+)[,}]') do
 		if value:sub(1, 1) == "\"" then
 			-- JSON string, extract it
@@ -74,7 +75,7 @@ local function handleinput()
 		local instance = instancemap[instname]
 		assert(instance, "No module instance with name \""..instname.."\"")
 
-		-- Tell the module instance
+		-- Call the module handler
 		local handler = instance.clickevent
 		if handler then handler(obj) end
 	end
@@ -88,11 +89,12 @@ local function run()
 
 	local typedispatch = {
 		["string"] = function(str)
-			-- Strings are written non-escaped. This allows use of "util.format" in status config
+			-- Strings are written non-escaped. This allows use of "util.format" in status config.
 			util.printraw(str)
 		end,
 		["function"] = function(f)
-			-- Function created by some module. The function is responsible for outputting data
+			-- Function created by some module. The function is responsible for outputting data,
+			-- its return value is ignored.
 			f()
 		end,
 		["table"] = function(t)
@@ -126,6 +128,7 @@ local function run()
 		util.printraw("],\n")
 		util.flush()
 
+		-- Wait until either the delay expires or i3bar (or someone else) sent something to stdin
 		local res = poll.rpoll(0, config.DELAY * 1000)
 		if res == 1 then
 			-- i3bar sent an event
