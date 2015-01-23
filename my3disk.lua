@@ -27,7 +27,7 @@ local function fmtspace(kbytes, decimals)
     return kbytes
 end
 
-local mod = {
+return {
     --[[
 
     Required Parameters:
@@ -72,5 +72,3 @@ local mod = {
         end
     end,
 }
-
-return mod
