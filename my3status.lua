@@ -29,7 +29,7 @@ util.setcolor(config.ALLOW_COLOR)
 -- We need at least Lua 5.2
 --
 -- 5.3 would be fine as well, I think. But nobody uses it anyways, right?
-assert(_VERSION == "Lua 5.2")
+assert(_VERSION == "Lua 5.2", "my3status requires Lua 5.2")
 
 
 -- Maps instance IDs to instantiated module tables. For use with click events.
