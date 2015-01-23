@@ -32,6 +32,29 @@ Now open your i3 config and replace the `status_command` of the `bar` section wi
 
 The configuration is done via `config.lua`. A simple default configuration is provided.
 
+## Custom Colors
+
+The `my3util` module provides a `colorval` function that takes a color table and a value in the range 0..1 and returns the color the value should be displayed in as specified in the table. Modules that support colors will provide a sensible default table, and may additionally allow custom colors via a configuration parameter.
+
+Example color table:
+
+```lua
+
+{
+    { 0.2, util.colors.red },
+    { 0.5, util.colors.yellow },
+    { 0.75, util.colors.green },
+    { 1, util.colors.blue },
+}
+
+```
+
+This table specifies that a value <= 0.2 should be printed in red, a value <= 0.5 in yellow, a value <= 0.75 in green, and all remaining values (<= 1) in blue.
+
+All color tables must be sorted ascending. The last entry must specify a value of 1.
+
 # Extension
 
 You can easily write custom modules for `my3status`. The existing modules should serve as a good reference point, `my3volume.lua` even demonstrates the use of click events from i3bar.
+
+The `my3util` module provides utility functions that should be used by my3status modules. See other modules for usage hints or `my3util.lua` for some documentation.
