@@ -56,8 +56,12 @@ local mod = {
             -- Count all processes + irq + softirq towards "usage"
             local usage = delta[1] + delta[2] + delta[3] + delta[6] + delta[7]
 
-            local pct = usage / total
-            if total == 0 then pct = 0 end
+            -- Ensure that pct is always valid
+            local pct
+            if total == 0 then pct = 0
+            else pct = usage / total end
+            if pct < 0 then pct = 0
+            elseif pct > 1 then pct = 1 end
 
             local color = util.colorval(colors, pct)
 
