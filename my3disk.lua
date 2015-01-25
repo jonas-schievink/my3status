@@ -80,4 +80,6 @@ return {
 
     -- Export "querydisk" function
     querydisk = querydisk,
+    
+    fmtspace = fmtspace,
 }

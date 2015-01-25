@@ -2,7 +2,7 @@ local util = require("my3util")
 local volume = require("my3volume")
 local datetime = require("my3datetime")
 local cpu = require("my3cpu")
-local disk = require("my3disk")
+local diskbar = require("my3diskbar")
 
 return {
     --[[
@@ -15,7 +15,7 @@ return {
 
     ]]
     STATUS_CFG = {
-        disk.new("/"),
+        diskbar.new("/"),
     	cpu.new(),
     	volume.new(),
     	datetime.new("%A, %d.%m.%Y %X"),
