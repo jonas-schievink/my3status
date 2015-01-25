@@ -14,7 +14,7 @@ local mod = {
     new = function(cfg)
         cfg = cfg or {}
 
-        local prefix = cfg.prefix or "CPU: "
+        local prefix = cfg.prefix or "CPU:"
         local postfix = cfg.postfix or ""
         local colors = cfg.colors or {
             { 0.2, util.colors.blue },
@@ -65,10 +65,11 @@ local mod = {
             elseif pct > 1 then pct = 1 end
 
             local color = util.colorval(colors, pct)
+            pct = string.format("%3i", math.floor(pct * 100))
 
             util.print(prefix, nil, false)
             -- EXERCISE 1: Explain what `postfix == ""` does in this context
-            util.print(math.floor(pct * 100).."%", color, postfix == "")
+            util.print(pct.."%", color, postfix == "")
             util.print(postfix)
         end
     end,
