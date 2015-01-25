@@ -47,10 +47,11 @@ return {
     --[[
 
     Required Parameters:
-    * path - Mount point path that should be queried. Default is "/".
+    * path - Mount point path that should be queried
 
     Optional Parameters:
     * formatter - Lua function that formats its arguments "total", "used" and "avail".
+    * updatediv - The update frequency is divided by this to save CPU
 
     The string returned by `formatter` is printed directly, so it has to be formatted with
     `util.format`.

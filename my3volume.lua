@@ -7,12 +7,13 @@ local mod = {
 	--[[
 
 	Parameters:
-	* item: The ALSA item to query. Defaults to "Master".
-	* barwidth: The width of the bar in characters. Defaults to 16.
-	* fillsym: Symbol to print for a filled bar segment. Defaults to "#".
-	* emptysym: Symbol to print for an empty bar segment. Defaults to " ".
-	* prefix: Text to print before the bar. Defaults to "[".
-	* postfix: Text to print after the bar. Defaults to "]".
+	* item: The ALSA item to query
+	* barwidth: The width of the bar in characters
+	* fillsym: Symbol to print for a filled bar segment
+	* emptysym: Symbol to print for an empty bar segment
+	* prefix: Text to print before the bar
+	* muteprefix: Prefix to use when the channel is muted
+	* postfix: Text to print after the bar
 	* colors: Table specifying colors for different values (see below).
 
 	The color table is a table in the following format:

@@ -4,6 +4,22 @@ local disk = require("my3disk")
 local util = require("my3util")
 
 return {
+    --[[
+
+    Required Parameters:
+    * path - A path on the disk to query
+
+    Optional Parameters:
+    * prefix
+    * postfix
+    * barwidth
+    * fillsym
+    * emptysym
+    * nofree - When set to true, hides the "XX.X GiB free" text and just displays the bar
+    * updatediv - The update frequency is divided by this to save CPU
+    * colors
+
+    ]]
     new = function(path, cfg)
         cfg = cfg or {}
 

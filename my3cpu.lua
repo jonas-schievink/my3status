@@ -6,8 +6,8 @@ local mod = {
     --[[
 
     Parameters:
-    * prefix: Text to print before the percentage. Defaults to "CPU: "
-    * postfix: Text to print after the percentage. Defaults to ""
+    * prefix: Text to print before the percentage
+    * postfix: Text to print after the percentage
     * colors: Color table to use to color the percentage
 
     ]]
