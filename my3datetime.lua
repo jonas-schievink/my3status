@@ -2,12 +2,16 @@
 
 local util = require("my3util")
 
-local mod = {
+return {
+    --[[
+
+    Required Parameters:
+    * fmt - Formatting string passed to strftime
+
+    ]]
     new = function(fmt)
         return function()
             util.print(os.date(fmt))
         end
     end,
 }
-
-return mod

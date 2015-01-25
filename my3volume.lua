@@ -3,7 +3,7 @@
 
 local util = require("my3util")
 
-local mod = {
+return {
 	--[[
 
 	Parameters:
@@ -140,5 +140,3 @@ local mod = {
 		}
 	end,
 }
-
-return mod
