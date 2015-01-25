@@ -61,7 +61,7 @@ return {
 
         cfg = cfg or {}
 
-        local updatedic = cfg.updatediv or 20
+        local updatediv = cfg.updatediv or 20
         local formatter = cfg.formatter or function(total, used, avail)
             total = fmtspace(total)
             used = fmtspace(used)
@@ -76,7 +76,7 @@ return {
             -- Update disk usage every `updatediv` updates
             updates = updates + 1
             if updates % updatediv == 0 then
-                total, used, avail = disk.querydisk(path)
+                total, used, avail = querydisk(path)
             end
 
             local rawstr = formatter(total, used, avail)

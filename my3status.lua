@@ -20,9 +20,12 @@ sig.signal(sig.SIGUSR1, function() end)
 -- running with i3bar). FIXME
 package.path = package.path..";"..os.getenv("HOME").."/.i3/my3status/?.lua"
 
+local argv = {...}
+local configmodule = argv[1] or "config"
+
 -- Load my3util and the user config from the "hacked" path
 local util = require("my3util")
-local config = require("config")
+local config = require(configmodule)
 
 util.setcolor(config.ALLOW_COLOR)
 
