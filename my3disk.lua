@@ -61,6 +61,7 @@ return {
 
         cfg = cfg or {}
 
+        local updatedic = cfg.updatediv or 20
         local formatter = cfg.formatter or function(total, used, avail)
             total = fmtspace(total)
             used = fmtspace(used)
@@ -69,9 +70,14 @@ return {
             return util.format(used.." / "..total.." ("..avail.." free)")
         end
 
+        local updates = -1
+        local total, used, avail
         return function()
-            -- Query filesystem by running `df`
-            local total, used, avail = querydisk(path)
+            -- Update disk usage every `updatediv` updates
+            updates = updates + 1
+            if updates % updatediv == 0 then
+                total, used, avail = disk.querydisk(path)
+            end
 
             local rawstr = formatter(total, used, avail)
             util.printraw(rawstr)
@@ -80,6 +86,6 @@ return {
 
     -- Export "querydisk" function
     querydisk = querydisk,
-    
+
     fmtspace = fmtspace,
 }
