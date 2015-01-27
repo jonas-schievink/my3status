@@ -3,9 +3,12 @@
 local time = require("posix.time")
 
 local allow_color = true
+local dodebug = false
 
--- Writes the given objects to stderr.
+-- Writes the given objects to stderr if debugging is enabled.
 local function debug(...)
+	if not dodebug then return end
+
 	io.stderr:write("[DEBUG]")
 
 	local items = {...}
@@ -18,6 +21,10 @@ local function debug(...)
 	end
 
 	io.stderr:write("\n")
+end
+
+local function setdebug(d)
+	dodebug = d
 end
 
 -- Sleeps for the given time in seconds. This is done by invoking `sleep [time]`. If the system's
@@ -194,6 +201,7 @@ local function export(name, obj)
 end
 
 export("debug", debug)
+export("setdebug", setdebug)
 export("sleep", sleep)
 export("checkparam", checkparam)
 export("jsonescape", jsonescape)

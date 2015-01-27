@@ -38,6 +38,7 @@ do
 		config = require(configmodule)
 
 		util.setcolor(config.ALLOW_COLOR)
+		util.setdebug(config.DEBUG)
 	end
 	init(...)
 end
