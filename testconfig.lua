@@ -13,8 +13,13 @@ local cpu = require("my3cpu")
 local disk = require("my3disk")
 local diskbar = require("my3diskbar")
 
+local mpd = require("my3mpd")
+
+util.setdebug(true)
 return {
     STATUS_CFG = {
+        mpd.new(),
+
         diskbar.new("/"),
         disk.new("/"),
         cpu.new(),
@@ -23,11 +28,8 @@ return {
     },
 
     -- Delay in seconds between prints. Sub-second values are allowed.
-    DELAY = 0.1,
+    DELAY = 0.5,
 
     -- Set this to false to disable colored output
     ALLOW_COLOR = true,
-
-    -- Outputs debugging info
-    DEBUG = true,
 }
