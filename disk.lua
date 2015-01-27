@@ -60,7 +60,7 @@ return {
 
     ]]
     new = function(path, cfg)
-        assert(type(path) == "string", "path must be a string (in new() of my3disk)")
+        assert(type(path) == "string", "path must be a string")
 
         cfg = cfg or {}
 

@@ -33,7 +33,7 @@ do
 		local argv = {...}
 		local configmodule = argv[1] or "config"
 
-		-- Load my3util and the user config from the "hacked" path
+		-- Load util and the user config from the "hacked" path
 		util = require("util")
 		config = require(configmodule)
 
