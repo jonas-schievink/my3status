@@ -1,6 +1,6 @@
 -- Prints the CPU usage in percent
 
-local util = require("my3util")
+local util = require("util")
 
 return {
     --[[

@@ -6,20 +6,18 @@ The example config in `config.lua` serves as a reasonable default configuration 
 
 ]]
 
-local util = require("my3util")
-local volume = require("my3volume")
-local datetime = require("my3datetime")
-local cpu = require("my3cpu")
-local disk = require("my3disk")
-local diskbar = require("my3diskbar")
-
-local mpd = require("my3mpd")
+local util = require("util")
+local volume = require("volume")
+local datetime = require("datetime")
+local cpu = require("cpu")
+local disk = require("disk")
+local diskbar = require("diskbar")
+local mpd = require("mpd")
 
 util.setdebug(true)
 return {
     STATUS_CFG = {
         mpd.new(),
-
         diskbar.new("/"),
         disk.new("/"),
         cpu.new(),

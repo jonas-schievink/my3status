@@ -1,9 +1,9 @@
-local util = require("my3util")
-local volume = require("my3volume")
-local datetime = require("my3datetime")
-local cpu = require("my3cpu")
-local diskbar = require("my3diskbar")
-local mpd = require("my3mpd")
+local util = require("util")
+local volume = require("volume")
+local datetime = require("datetime")
+local cpu = require("cpu")
+local diskbar = require("diskbar")
+local mpd = require("mpd")
 
 return {
     --[[

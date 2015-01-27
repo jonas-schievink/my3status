@@ -1,6 +1,6 @@
 -- Outputs the current date and time
 
-local util = require("my3util")
+local util = require("util")
 
 return {
     --[[

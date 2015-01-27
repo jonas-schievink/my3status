@@ -1,7 +1,7 @@
 -- Shows information about MPD (current track, etc.)
 -- Requires the "mpc" tool for querying MPD from the command line
 
-local util = require("my3util")
+local util = require("util")
 
 return {
     --[[

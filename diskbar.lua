@@ -1,7 +1,7 @@
 -- Displays disk usage as a bar
 
-local disk = require("my3disk")
-local util = require("my3util")
+local disk = require("disk")
+local util = require("util")
 
 return {
     --[[

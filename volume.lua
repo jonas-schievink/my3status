@@ -1,7 +1,7 @@
 -- my3status plugin for showing the ALSA volume as a bar.
 -- Requires "amixer" and possibly the en_US locale (FIXME).
 
-local util = require("my3util")
+local util = require("util")
 
 return {
 	--[[

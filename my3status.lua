@@ -34,7 +34,7 @@ do
 		local configmodule = argv[1] or "config"
 
 		-- Load my3util and the user config from the "hacked" path
-		util = require("my3util")
+		util = require("util")
 		config = require(configmodule)
 
 		util.setcolor(config.ALLOW_COLOR)

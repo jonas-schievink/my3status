@@ -1,6 +1,6 @@
 -- Shows disk usage as text
 
-local util = require("my3util")
+local util = require("util")
 
 local spaceunits = { "K", "M", "G", "T", "P", "E" }
 
