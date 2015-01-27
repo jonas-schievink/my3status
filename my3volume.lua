@@ -62,6 +62,8 @@ return {
 						vol, mutestr = line:match("Mono: Playback (%d+) .* %[(.*)%]")
 					end
 				end
+				f:close()
+				f = nil
 
 				if min == nil or vol == nil then
 					error("Unexpected amixer output")

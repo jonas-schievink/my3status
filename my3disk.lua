@@ -32,6 +32,8 @@ local function querydisk(path)
 
     f:read("*l")    -- dispose header
     local line = f:read("*l")
+    f:close()
+    f = nil
 
     local total, used, avail = line:match(".* (%d+)%s+(%d+)%s+(%d+)%s+%d+%%%s+")
     assert(total, "Unexpected `df` output")
