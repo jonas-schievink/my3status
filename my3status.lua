@@ -7,32 +7,40 @@
 -- to i3bar. my3status always outputs JSON.
 ---------------------------------------------------------------------------------------------------
 
--- Hard dependency on luaposix. Make sure to install.
-local posix = require("posix")
-local sig = require("posix.signal")
-local poll = require("posix.poll")
+local util, config
+local rpoll
 
--- Install signal handler for SIGUSR1. This allows sending SIGUSR1 to force a refresh
--- (like i3status)
-sig.signal(sig.SIGUSR1, function() end)
+do
+	local function init(...)
+		-- We need at least Lua 5.2
+		--
+		-- 5.3 would be fine as well, I think. But nobody uses it anyways, right?
+		assert(_VERSION == "Lua 5.2", "my3status requires Lua 5.2")
 
--- Hack required to allow loading modules from ~/.i3/my3status/ (which isn't the working dir when
--- running with i3bar). FIXME
-package.path = package.path..";"..os.getenv("HOME").."/.i3/my3status/?.lua"
+		-- Hard dependency on luaposix. Make sure to install.
+		local sig = require("posix.signal")
+		local poll = require("posix.poll")
+		rpoll = poll.rpoll
 
-local argv = {...}
-local configmodule = argv[1] or "config"
+		-- Install signal handler for SIGUSR1. This allows sending SIGUSR1 to force a refresh
+		-- (like i3status)
+		sig.signal(sig.SIGUSR1, function() end)
 
--- Load my3util and the user config from the "hacked" path
-local util = require("my3util")
-local config = require(configmodule)
+		-- Hack required to allow loading modules from ~/.i3/my3status/ (which isn't the working
+		-- dir when running with i3bar). FIXME
+		package.path = package.path..";"..os.getenv("HOME").."/.i3/my3status/?.lua"
 
-util.setcolor(config.ALLOW_COLOR)
+		local argv = {...}
+		local configmodule = argv[1] or "config"
 
--- We need at least Lua 5.2
---
--- 5.3 would be fine as well, I think. But nobody uses it anyways, right?
-assert(_VERSION == "Lua 5.2", "my3status requires Lua 5.2")
+		-- Load my3util and the user config from the "hacked" path
+		util = require("my3util")
+		config = require(configmodule)
+
+		util.setcolor(config.ALLOW_COLOR)
+	end
+	init(...)
+end
 
 
 -- Maps instance IDs to instantiated module tables. For use with click events.
@@ -146,7 +154,7 @@ local function run()
 		util.flush()
 
 		-- Wait until either the delay expires or i3bar (or someone else) sent something to stdin
-		local res = poll.rpoll(0, config.DELAY * 1000)
+		local res = rpoll(0, config.DELAY * 1000)
 		if res == 1 then
 			-- i3bar sent an event
 			handleinput()
