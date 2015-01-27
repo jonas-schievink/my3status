@@ -167,7 +167,7 @@ local function colorval(colors, percent)
 			break
 		end
 	end
-	assert(color, "Invalid color table, no color for volume level "..percent)
+	assert(color, "Invalid color table, no color for value "..percent)
 
 	return color
 end
