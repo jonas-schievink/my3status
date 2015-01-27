@@ -27,6 +27,10 @@ local function setdebug(d)
 	dodebug = d
 end
 
+local function getdebug()
+	return dodebug
+end
+
 -- Sleeps for the given time in seconds. This is done by invoking `sleep [time]`. If the system's
 -- sleep command supports it, you can also pass non-integer values (allowing for sub-second sleep).
 local function sleep(secs)
@@ -202,6 +206,7 @@ end
 
 export("debug", debug)
 export("setdebug", setdebug)
+export("getdebug", getdebug)
 export("sleep", sleep)
 export("checkparam", checkparam)
 export("jsonescape", jsonescape)
