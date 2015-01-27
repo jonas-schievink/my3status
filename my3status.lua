@@ -38,7 +38,6 @@ do
 		config = require(configmodule)
 
 		util.setcolor(config.ALLOW_COLOR)
-		util.setdebug(config.DEBUG)
 	end
 	init(...)
 end
@@ -51,7 +50,8 @@ local hasinput = false -- set to true after first line was read
 local function handleinput()
 	if not hasinput then
 		hasinput = true
-		assert(io.read("*l") == "[")	-- i3bar sends this as the first line, discard it
+		-- i3bar sends this as the first line, discard it
+		assert(io.read("*l") == "[", "invalid i3bar input data")
 	end
 
 	-- Read line of JSON, sacrifice a lamb, parse it
@@ -156,6 +156,7 @@ local function run()
 			success, msg = pcall(updatestatus)
 			if success then break end
 
+			msg = msg or ""
 			util.debug("[ERROR ("..i.."/5)] "..msg)
 		end
 		if not success then error("update failed too many times, aborting") end
@@ -163,7 +164,7 @@ local function run()
 		util.printraw("],\n")
 		util.flush()
 
-		if config.DEBUG then dbg() end
+		if util.getdebug() then dbg() end
 
 		-- Wait until either the delay expires or i3bar (or someone else) sent something to stdin
 		local res = rpoll(0, config.DELAY * 1000)
