@@ -1,6 +1,5 @@
 -- Utility functions for my3status modules
 
-local posix = require("posix")
 local time = require("posix.time")
 
 local allow_color = true
