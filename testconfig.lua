@@ -23,8 +23,11 @@ return {
     },
 
     -- Delay in seconds between prints. Sub-second values are allowed.
-    DELAY = 0.5,
+    DELAY = 0.1,
 
     -- Set this to false to disable colored output
     ALLOW_COLOR = true,
+
+    -- Outputs debugging info
+    DEBUG = true,
 }
