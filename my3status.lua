@@ -84,49 +84,63 @@ local function handleinput()
 	end
 end
 
+-- Maps types that can be used in the STATUS_CFG to handlers
+local typedispatch = {
+	["string"] = function(str)
+		-- Strings are written non-escaped. This allows use of "util.format" in status config.
+		util.printraw(str)
+	end,
+	["function"] = function(f)
+		-- Function created by some module. The function is responsible for outputting data,
+		-- its return value is ignored.
+		f()
+	end,
+	["table"] = function(t)
+		-- "Full" module with an instance table. Allows to process i3 click events.
+		local instance = tostring(t.instance)	-- instance identifier
+		local func = t.func
+
+		instancemap[instance] = t
+
+		assert(type(instance) == "string" or type(instance) == "number")
+		assert(type(func) == "function")
+
+		util.setinst(instance)
+		func()
+		util.setinst(nil)
+	end,
+}
+
+-- Updates all status elements as defined in STATUS_CFG
+local function updatestatus()
+	for i, elem in ipairs(config.STATUS_CFG) do
+		-- Output all configured status line elements
+		local ty = type(elem)
+		local f = typedispatch[ty]
+		if f then f(elem)
+		else error("Unknown status line element type: "..ty) end
+	end
+end
+
 -- Main function. Starts sending JSON data to i3bar and queries all modules in a loop, building the
 -- status line as configured
 local function run()
 	print('{"version":1, "click_events":true}')
 	print("[[],")
 
-	local typedispatch = {
-		["string"] = function(str)
-			-- Strings are written non-escaped. This allows use of "util.format" in status config.
-			util.printraw(str)
-		end,
-		["function"] = function(f)
-			-- Function created by some module. The function is responsible for outputting data,
-			-- its return value is ignored.
-			f()
-		end,
-		["table"] = function(t)
-			-- "Full" module with an instance table. Allows to process i3 click events.
-			local instance = tostring(t.instance)	-- instance identifier
-			local func = t.func
-
-			instancemap[instance] = t
-
-			assert(type(instance) == "string" or type(instance) == "number")
-			assert(type(func) == "function")
-
-			util.setinst(instance)
-			func()
-			util.setinst(nil)
-		end,
-	}
-
 	while true do
 		util.printraw("[")
 		util.printraw('{"full_text":"","separator":false,"separator_block_width":0}')
 
-		for i, elem in ipairs(config.STATUS_CFG) do
-			-- Output all configured status line elements
-			local ty = type(elem)
-			local f = typedispatch[ty]
-			if f then f(elem)
-			else error("Unknown status line element type: "..ty) end
+		-- Try to update up to 5 times
+		local success, msg
+		for i = 1, 5 do
+			success, msg = pcall(updatestatus)
+			if success then break end
+
+			util.debug("[ERROR ("..i.."/5)] "..msg)
 		end
+		if not success then error("update failed too many times, aborting") end
 
 		util.printraw("],\n")
 		util.flush()
