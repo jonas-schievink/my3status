@@ -10,6 +10,8 @@ return {
 
     ]]
     new = function(fmt)
+        assert(type(fmt) == "string")
+        
         return function()
             util.print(os.date(fmt))
         end
