@@ -14,7 +14,7 @@ do
 	local function init(...)
 		-- We need at least Lua 5.2
 		--
-		-- 5.3 would be fine as well, I think. But nobody uses it anyways, right?
+		-- 5.3 should be fine as well, I think. But nobody uses it anyways, right?
 		assert(_VERSION == "Lua 5.2", "my3status requires Lua 5.2")
 
 		-- Hard dependency on luaposix. Make sure to install.
@@ -35,7 +35,24 @@ do
 
 		-- Load util and the user config from the "hacked" path
 		util = require("util")
-		config = require(configmodule)
+		local success, nconfig = pcall(require, configmodule)
+
+		if configmodule == "config" and not success then
+			io.stderr:write("Creating default config...\n")
+			local output = assert(io.open("config.lua", "w+"), "couldn't open config.lua")
+			local input = assert(io.open("defaultconfig.lua"), "couldn't open default config")
+
+			output:write(input:read("*a"))
+			output:close()
+			input:close()
+
+			io.stderr:write("Done. Reloading...\n")
+
+			nconfig = require(configmodule)
+		end
+
+		config = nconfig
+		assert(type(config) == "table", "config module malformed (didn't return a table)")
 
 		util.setcolor(config.ALLOW_COLOR)
 	end
