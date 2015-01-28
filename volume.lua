@@ -14,6 +14,7 @@ return {
 	* prefix: Text to print before the bar
 	* muteprefix: Prefix to use when the channel is muted
 	* postfix: Text to print after the bar
+	* scrollvol: Increase/Decrease volume by this (raw value) by scrolling the mouse
 	* colors: Table specifying colors for different values (see below).
 
 	The color table is a table in the following format:
@@ -39,6 +40,7 @@ return {
 		local prefix = cfg.prefix or "🔊 ["
 		local postfix = cfg.postfix or "]"
 		local muteprefix = cfg.muteprefix or "🔇 ["
+		local scrollvol = cfg.scrollvol or 4
 		local colors = cfg.colors or {
 			{ 0.5, util.colors.green },
 			{ 0.75, util.colors.yellow },
@@ -122,11 +124,11 @@ return {
 					end,
 					[4] = function()
 						-- Increase volume when scrolling up
-						os.execute("amixer -q set \""..item.."\" 5%+ unmute")
+						os.execute("amixer -q set \""..item.."\" "..scrollvol.."+ unmute")
 					end,
 					[5] = function()
 						-- Decrease volume when scrolling down
-						os.execute("amixer -q set \""..item.."\" 5%- unmute")
+						os.execute("amixer -q set \""..item.."\" "..scrollvol.."- unmute")
 					end,
 				}
 
