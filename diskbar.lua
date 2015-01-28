@@ -47,18 +47,14 @@ return {
 
             local percent = used / total
             local col = util.colorval(colors, percent)
-            local filled = percent * barwidth
-
-            local bar = ""
-            for i = 1, filled do
-                bar = bar..fillsym
-            end
-            for i = filled, barwidth-1 do
-                bar = bar..emptysym
-            end
 
             util.print(prefix, nil, false)
-            util.print(bar, col, false)
+            util.print(util.bar({
+                pct = percent,
+                width = barwidth,
+                fillsym = fillsym,
+                emptysym = emptysym,
+            }), col, false)
             util.print(postfix, nil, nofree)
 
             if not nofree then util.print(" "..disk.fmtspace(avail).." left") end
