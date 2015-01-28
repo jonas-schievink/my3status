@@ -66,44 +66,38 @@ return {
 				f = nil
 
 				if min == nil or vol == nil then
-					error("Unexpected amixer output")
+					error("unexpected amixer output")
 				end
+
+				min = tonumber(min)
+				assert(min, "unexpected amixer output: min is not a number")
+				max = tonumber(max)
+				assert(max, "unexpected amixer output: max is not a number")
+				vol = tonumber(vol)
+				assert(vol, "unexpected amixer output: volume is not a number")
 
 				local mute
 				if mutestr == "on" then mute = false
 				elseif mutestr == "off" then mute = true
-				else error("Unexpected mute state "..mutestr) end
+				else error("unexpected mute state "..mutestr) end
 
-				-- Map vol to the range 0..max-min
-				vol = vol - min
-				max = max - min
-
-				-- set vol to 0 on mute, because it still has the unmuted value
+				-- set vol to min on mute, because it still has the unmuted value
 				local prefix = prefix
 				if mute then
-					vol = 0
+					vol = min
 					prefix = muteprefix
 				end
 
-				-- Calculate how full the bar should be drawn
-				local percent = vol / max
-				local barfill = percent * barwidth
-
-				-- Find out what color to use
-				local color = util.colorval(colors, percent)
+				local pct = (vol-min) / (max-min)
+				local color = util.colorval(colors, pct)
 
 				util.print(prefix, nil, false)
-
-				-- "Render" the volume bar
-				local str = ""
-				for i = 1, barfill do
-					str = str..fillsym
-				end
-				for i = barfill, barwidth-1 do
-					str = str..emptysym
-				end
-
-				util.print(str, color, false)
+				util.print(util.bar({
+					pct = pct,
+					width = barwidth,
+					fillsym = fillsym,
+					emptysym = emptysym,
+				}), color, false)
 				util.print(postfix)
 			end,
 			clickevent = function(e)

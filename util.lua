@@ -177,7 +177,7 @@ local function colorval(colors, percent)
 			break
 		end
 	end
-	assert(color, "Invalid color table, no color for value "..percent)
+	assert(color, "invalid color table, no color for value "..percent)
 
 	return color
 end
@@ -197,6 +197,36 @@ local colors = {
 	white = "#ffffff",
 	black = "#000000",
 }
+
+--[[
+
+Returns an ASCII bar that displays the given value.
+
+Named Parameters:
+* val - The value to draw as a bar
+* min - The lower bound of the value
+* max - The upper bound of the value
+* width - The width of the bar in characters (assuming both fillsym and emptysym are one char wide)
+* fillsym - The string to print for a filled bar segment
+* emptysym - The string to print for an empty bar segment
+
+]]
+local function bar(tbl)
+	local pct, width, fillsym, emptysym = tbl.pct, tbl.width, tbl.fillsym, tbl.emptysym
+
+	assert(type(pct) == "number", "`pct` must be a number")
+	assert(pct >= 0 and pct <= 1, "`pct` must be in range [0..1]")
+	assert(type(width) == "number", "`width` must be a number")
+	assert(fillsym, "parameter `fillsym` is required")
+	assert(emptysym, "parameter `emptysym` is required")
+
+	-- width units filled
+	local fill = math.floor(pct * width)
+
+	debug("util.bar", pct.."%", fill, width)
+
+	return fillsym:rep(fill)..emptysym:rep(width - fill)
+end
 
 local mod = {}
 local function export(name, obj)
@@ -220,5 +250,6 @@ export("flush", flush)
 export("setcolor", setcolor)
 export("colorval", colorval)
 export("colors", colors)
+export("bar", bar)
 
 return mod

@@ -157,7 +157,7 @@ local function run()
 			if success then break end
 
 			msg = msg or ""
-			util.debug("[ERROR ("..i.."/5)] "..msg)
+			io.stderr:write("[ERROR ("..i.."/5)] "..msg.."\n")
 		end
 		if not success then error("update failed too many times, aborting") end
 
