@@ -223,7 +223,7 @@ local function bar(tbl)
 	-- width units filled
 	local fill = math.floor(pct * width)
 
-	debug("util.bar", pct.."%", fill, width)
+	debug("util.bar", pct, fill, width)
 
 	return fillsym:rep(fill)..emptysym:rep(width - fill)
 end

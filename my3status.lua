@@ -28,27 +28,34 @@ do
 
 		-- Hack required to allow loading modules from ~/.i3/my3status/ (which isn't the working
 		-- dir when running with i3bar). FIXME
-		package.path = package.path..";"..os.getenv("HOME").."/.i3/my3status/?.lua"
+		local rootdir = os.getenv("HOME").."/.i3/my3status/"
+		package.path = package.path..";"..rootdir.."?.lua"
 
 		local argv = {...}
 		local configmodule = argv[1] or "config"
 
 		-- Load util and the user config from the "hacked" path
 		util = require("util")
+
 		local success, nconfig = pcall(require, configmodule)
+		if not success then
+			io.stderr:write("couldn't load config module '"..configmodule.."'")
 
-		if configmodule == "config" and not success then
-			io.stderr:write("Creating default config...\n")
-			local output = assert(io.open("config.lua", "w+"), "couldn't open config.lua")
-			local input = assert(io.open("defaultconfig.lua"), "couldn't open default config")
+			if configmodule == "config" then
+				io.stderr:write("Creating default config...\n")
+				local output = assert(io.open(rootdir.."config.lua", "w+"), "couldn't open config.lua")
+				local input = assert(io.open(rootdir.."defaultconfig.lua"), "couldn't open default config")
 
-			output:write(input:read("*a"))
-			output:close()
-			input:close()
+				output:write(input:read("*a"))
+				output:close()
+				input:close()
 
-			io.stderr:write("Done. Reloading...\n")
+				io.stderr:write("Done. Reloading...\n")
 
-			nconfig = require(configmodule)
+				nconfig = require(configmodule)
+			else
+				error("config module '"..configmodule.."' not found")
+			end
 		end
 
 		config = nconfig
