@@ -66,3 +66,8 @@ All color tables must be sorted ascending. The last entry must specify a value o
 You can easily write custom modules for `my3status`. The existing modules should serve as a good reference point, `my3volume.lua` even demonstrates the use of click events from i3bar.
 
 The `my3util` module provides utility functions that should be used by my3status modules. See other modules for usage hints or `my3util.lua` for some documentation.
+
+# TODOs
+
+* Remove `util.geninst()` from modules. The ID is only used to dispatch input events, so this should be done internally by my3status.
+* Allow overriding any module's input event handler. This allows, for example, launching an MPD client when middle-clicking on the MPD module.
