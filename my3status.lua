@@ -162,15 +162,6 @@ local function updatestatus()
 	end
 end
 
-local minmem, maxmem
-local function dbg()
-	local used = math.floor(collectgarbage("count"))
-	if minmem == nil or used < minmem then minmem = used end
-	if maxmem == nil or used > maxmem then maxmem = used end
-
-	util.debug("Memory", minmem, used, maxmem)
-end
-
 -- Main function. Starts sending JSON data to i3bar and queries all modules in a loop, building the
 -- status line as configured
 local function run()
@@ -185,8 +176,6 @@ local function run()
 
 		util.printraw("],\n")
 		util.flush()
-
-		if util.getdebug() then dbg() end
 
 		-- Wait until either the delay expires or i3bar (or someone else) sends something to stdin
 		local res = rpoll(0, config.DELAY * 1000)
