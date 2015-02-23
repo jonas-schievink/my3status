@@ -22,19 +22,17 @@ do
 		local poll = require("posix.poll")
 		rpoll = poll.rpoll
 
-		-- Install signal handler for SIGUSR1. This allows sending SIGUSR1 to force a refresh
-		-- (like i3status)
+		-- Install signal handler for SIGUSR1 (USR1 is ignored this way). This allows sending
+		-- SIGUSR1 to force a refresh (like i3status)
 		sig.signal(sig.SIGUSR1, function() end)
 
-		-- Hack required to allow loading modules from ~/.i3/my3status/ (which isn't the working
-		-- dir when running with i3bar). FIXME
-		local rootdir = os.getenv("HOME").."/.i3/my3status/"
-		package.path = package.path..";"..rootdir.."?.lua"
+		-- If we can get the script directory, add is as a package search path
+		local scriptdir = arg[0]:match("(.*)/.*")
+		if scriptdir then package.path = package.path..";"..scriptdir.."/?.lua" end
 
-		local argv = {...}
-		local configmodule = argv[1] or "config"
+		local configmodule = arg[1] or "config"
 
-		-- Load util and the user config from the "hacked" path
+		-- Load util and the user config with the new search path
 		util = require("util")
 
 		local success, nconfig = pcall(require, configmodule)
