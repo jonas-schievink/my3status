@@ -143,13 +143,22 @@ local typedispatch = {
 }
 
 -- Updates all status elements as defined in STATUS_CFG
+local colred = true
 local function updatestatus()
 	for i, elem in ipairs(config.STATUS_CFG) do
 		-- Output all configured status line elements
 		local ty = type(elem)
 		local f = typedispatch[ty]
-		if f then f(elem)
-		else error("Unknown status line element type: "..ty) end
+		if f then
+			local success, msg = pcall(f, elem)
+			if not success then
+				if msg then msg = "error: "..msg else msg = "unknown error" end
+				util.print(msg, colred and util.colors.red or nil, nil, true)
+				colred = not colred
+			end
+		else
+			error("Unknown status line element type: "..ty)
+		end
 	end
 end
 
@@ -172,23 +181,14 @@ local function run()
 		util.printraw("[")
 		util.printraw('{"full_text":"","separator":false,"separator_block_width":0}')
 
-		-- Try to update up to 5 times
-		local success, msg
-		for i = 1, 5 do
-			success, msg = pcall(updatestatus)
-			if success then break end
-
-			msg = msg or ""
-			io.stderr:write("[ERROR ("..i.."/5)] "..msg.."\n")
-		end
-		if not success then error("update failed too many times, aborting") end
+		updatestatus()
 
 		util.printraw("],\n")
 		util.flush()
 
 		if util.getdebug() then dbg() end
 
-		-- Wait until either the delay expires or i3bar (or someone else) sent something to stdin
+		-- Wait until either the delay expires or i3bar (or someone else) sends something to stdin
 		local res = rpoll(0, config.DELAY * 1000)
 		if res == 1 then
 			-- i3bar sent an event
