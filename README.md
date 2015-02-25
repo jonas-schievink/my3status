@@ -70,6 +70,3 @@ The `my3util` module provides utility functions that should be used by my3status
 # TODOs
 
 * Remove `util.geninst()` from modules. The ID is only used to dispatch input events, so this should be done internally by my3status.
-* Allow overriding any module's input event handler. This allows, for example, launching an MPD client when middle-clicking on the MPD module.
-* Better error handling: The update loop will retry 5 times before exiting the program in case an error happens. It would be better to just display what went wrong instead.
-

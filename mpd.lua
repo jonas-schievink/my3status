@@ -49,7 +49,6 @@ return {
         end
 
         return {
-            instance = util.geninst(),
             func = function()
                 local f = io.popen(cmdline, "r")
                 local line = f:read("*l")

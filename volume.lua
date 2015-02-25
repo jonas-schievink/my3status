@@ -72,7 +72,6 @@ return {
 		util.debug("[volume]", item, min, max)
 
 		return {
-			instance = util.geninst(),
 			func = function()
 				-- read current level from last line of output
 				local f = io.popen("amixer get \""..item.."\"")

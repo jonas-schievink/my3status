@@ -128,13 +128,14 @@ local typedispatch = {
 	end,
 	["table"] = function(t)
 		-- "Full" module with an instance table. Allows to process i3 click events.
-		local instance = tostring(t.instance)	-- instance identifier
+		if not t.instance then t.instance = util.geninst() end
+		local instance = t.instance
 		local func = t.func
 
-		instancemap[instance] = t
-
-		assert(type(instance) == "string" or type(instance) == "number")
+		assert(type(instance) == "string")
 		assert(type(func) == "function")
+
+		instancemap[instance] = t
 
 		util.setinst(instance)
 		func()
