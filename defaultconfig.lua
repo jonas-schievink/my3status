@@ -16,7 +16,6 @@ return {
 
     ]]
     STATUS_CFG = {
-        mpd.new(),
         diskbar.new("/"),
     	cpu.new(),
     	volume.new(),
