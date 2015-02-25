@@ -1,8 +1,10 @@
 --[[
 
-This is a test configuration that's used to test all available modules. Run it with `my3status.lua testconfig`.
+This is a test configuration that's used to test all available modules.
+Run it with `my3status.lua testconfig`.
 
-The example config in `config.lua` serves as a reasonable default configuration and should not necessarily contain all modules.
+The example config in `defaultconfig.lua` serves as a reasonable default configuration and should
+not necessarily contain all modules.
 
 ]]
 
