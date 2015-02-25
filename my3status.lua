@@ -37,7 +37,7 @@ do
 
 		local success, nconfig = pcall(require, configmodule)
 		if not success then
-			io.stderr:write("couldn't load config module '"..configmodule.."'")
+			io.stderr:write("couldn't load config module '"..configmodule.."'\n")
 
 			if configmodule == "config" then
 				io.stderr:write("Creating default config...\n")
@@ -52,7 +52,7 @@ do
 
 				nconfig = require(configmodule)
 			else
-				error("config module '"..configmodule.."' not found")
+				error(nconfig)
 			end
 		end
 
