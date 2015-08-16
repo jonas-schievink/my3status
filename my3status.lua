@@ -1,4 +1,4 @@
-#!/bin/env lua
+#!/usr/bin/env lua
 
 ---------------------------------------------------------------------------------------------------
 -- my3status is an i3status replacement written in Lua.
