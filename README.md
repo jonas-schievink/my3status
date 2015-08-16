@@ -42,7 +42,7 @@ The configuration is done via `config.lua`. A simple default configuration is pr
 
 ## Custom Colors
 
-The `my3util` module provides a `colorval` function that takes a color table and a value in the range 0..1 and returns the color the value should be displayed in as specified in the table. Modules that support colors will provide a sensible default table, and may additionally allow custom colors via a configuration parameter.
+The `util` module provides a `colorval` function that takes a color table and a value in the range 0..1 and returns the color the value should be displayed in as specified in the table. Modules that support colors will provide a sensible default table, and may additionally allow custom colors via a configuration parameter.
 
 Example color table:
 
@@ -63,6 +63,6 @@ All color tables must be sorted ascending. The last entry must specify a value o
 
 # Extension
 
-You can easily write custom modules for `my3status`. The existing modules should serve as a good reference point, `my3volume.lua` even demonstrates the use of click events from i3bar.
+You can easily write custom modules for `my3status`. The existing modules should serve as a good reference point, `volume.lua` even demonstrates the use of click events from i3bar.
 
-The `my3util` module provides utility functions that should be used by my3status modules. See other modules for usage hints or `my3util.lua` for some documentation.
+The `util` module provides utility functions that should be used by my3status modules. See other modules for usage hints or `util.lua` for some documentation.
