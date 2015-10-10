@@ -13,9 +13,7 @@ local rpoll
 do
 	local function init(...)
 		-- We need at least Lua 5.2
-		--
-		-- 5.3 should be fine as well, I think. But nobody uses it anyways, right?
-		assert(_VERSION == "Lua 5.2", "my3status requires Lua 5.2")
+		assert(_VERSION == "Lua 5.2" or _VERSION == "Lua 5.3", "my3status requires Lua 5.2 or 5.3")
 
 		-- Hard dependency on luaposix. Make sure to install.
 		local sig = require("posix.signal")
