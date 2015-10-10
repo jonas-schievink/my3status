@@ -119,6 +119,8 @@ return {
                 else
                     util.print(nompdstr)
                 end
+
+                f:close()
             end,
             clickevent = function(e)
                 --[[
