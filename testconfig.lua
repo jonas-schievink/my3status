@@ -23,8 +23,8 @@ return {
         diskbar.new("/"),
         disk.new("/"),
         cpu.new(),
-    	volume.new(),
-    	datetime.new("%A, %d.%m.%Y %X"),
+        volume.new(),
+        datetime.new("%A, %d.%m.%Y %X"),
     },
 
     -- Delay in seconds between prints. Sub-second values are allowed.

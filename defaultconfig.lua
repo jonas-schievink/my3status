@@ -17,9 +17,9 @@ return {
     ]]
     STATUS_CFG = {
         diskbar.new("/"),
-    	cpu.new(),
-    	volume.new(),
-    	datetime.new("%A, %d.%m.%Y %X"),
+        cpu.new(),
+        volume.new(),
+        datetime.new("%A, %d.%m.%Y %X"),
     },
 
     -- Delay in seconds between prints. Sub-second values are allowed.

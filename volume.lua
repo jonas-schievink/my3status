@@ -4,153 +4,153 @@
 local util = require("util")
 
 return {
-	--[[
+    --[[
 
-	Parameters:
-	* item: The ALSA item to query
-	* barwidth: The width of the bar in characters
-	* fillsym: Symbol to print for a filled bar segment
-	* emptysym: Symbol to print for an empty bar segment
-	* prefix: Text to print before the bar
-	* muteprefix: Prefix to use when the channel is muted
-	* postfix: Text to print after the bar
-	* scrollvol: Increase/Decrease volume by this (raw value) by scrolling the mouse
-	* colors: Table specifying colors for different values (see below).
+    Parameters:
+    * item: The ALSA item to query
+    * barwidth: The width of the bar in characters
+    * fillsym: Symbol to print for a filled bar segment
+    * emptysym: Symbol to print for an empty bar segment
+    * prefix: Text to print before the bar
+    * muteprefix: Prefix to use when the channel is muted
+    * postfix: Text to print after the bar
+    * scrollvol: Increase/Decrease volume by this (raw value) by scrolling the mouse
+    * colors: Table specifying colors for different values (see below).
 
-	The color table is a table in the following format:
-	{
-		{ 0.5, util.colors.green },
-		{ 0.75, util.colors.yellow },
-		{ 1, util.colors.red },
-	}
+    The color table is a table in the following format:
+    {
+        { 0.5, util.colors.green },
+        { 0.75, util.colors.yellow },
+        { 1, util.colors.red },
+    }
 
-	The first value in each subtable is the maximum volume (in percent) for which the color will be
-	used. The second value is the color to use. The subtables must be ordered ascending. The last
-	entry must have a value of 1.
+    The first value in each subtable is the maximum volume (in percent) for which the color will be
+    used. The second value is the color to use. The subtables must be ordered ascending. The last
+    entry must have a value of 1.
 
-	]]
-	new = function(cfg)
-		cfg = cfg or {}
-		assert(type(cfg) == "table")
+    ]]
+    new = function(cfg)
+        cfg = cfg or {}
+        assert(type(cfg) == "table")
 
-		local item = cfg.item or "Master"
-		local barwidth = cfg.barwidth or 16
-		local fillsym = cfg.fillsym or "#"
-		local emptysym = cfg.emptysym or " "
-		local prefix = cfg.prefix or "🔊 ["
-		local postfix = cfg.postfix or "]"
-		local muteprefix = cfg.muteprefix or "🔇 ["
-		local scrollvol = cfg.scrollvol or 4
-		local colors = cfg.colors or {
-			{ 0.5, util.colors.green },
-			{ 0.75, util.colors.yellow },
-			{ 1, util.colors.red },
-		}
+        local item = cfg.item or "Master"
+        local barwidth = cfg.barwidth or 16
+        local fillsym = cfg.fillsym or "#"
+        local emptysym = cfg.emptysym or " "
+        local prefix = cfg.prefix or "🔊 ["
+        local postfix = cfg.postfix or "]"
+        local muteprefix = cfg.muteprefix or "🔇 ["
+        local scrollvol = cfg.scrollvol or 4
+        local colors = cfg.colors or {
+            { 0.5, util.colors.green },
+            { 0.75, util.colors.yellow },
+            { 1, util.colors.red },
+        }
 
-		cfg = nil
+        cfg = nil
 
-		-- fetch min/max level
-		local f = io.popen("amixer get \""..item.."\"")
-		local min, max
-		for line in f:lines() do
-			if min == nil then
-				min, max = line:match("Limits: Playback (%d+) %- (%d+)")
-			end
-		end
-		f:close()
-		f = nil
+        -- fetch min/max level
+        local f = io.popen("amixer get \""..item.."\"")
+        local min, max
+        for line in f:lines() do
+            if min == nil then
+                min, max = line:match("Limits: Playback (%d+) %- (%d+)")
+            end
+        end
+        f:close()
+        f = nil
 
-		if min == nil then
-			error("unexpected amixer output")
-		end
+        if min == nil then
+            error("unexpected amixer output")
+        end
 
-		min = tonumber(min)
-		assert(min, "unexpected amixer output: min is not a number")
-		max = tonumber(max)
-		assert(max, "unexpected amixer output: max is not a number")
+        min = tonumber(min)
+        assert(min, "unexpected amixer output: min is not a number")
+        max = tonumber(max)
+        assert(max, "unexpected amixer output: max is not a number")
 
-		util.debug("[volume]", item, min, max)
+        util.debug("[volume]", item, min, max)
 
-		return {
-			func = function()
-				-- read current level from last line of output
-				local f = io.popen("amixer get \""..item.."\"")
-				local lastline
-				for line in f:lines() do
-					lastline = line
-				end
-				f:close()
-				f = nil
+        return {
+            func = function()
+                -- read current level from last line of output
+                local f = io.popen("amixer get \""..item.."\"")
+                local lastline
+                for line in f:lines() do
+                    lastline = line
+                end
+                f:close()
+                f = nil
 
-				local vol, mutestr = lastline:match("Playback (%d+) .* %[(.*)%]")
-				if vol == nil then
-					error("unexpected amixer output: last line invalid, volume expected")
-				end
+                local vol, mutestr = lastline:match("Playback (%d+) .* %[(.*)%]")
+                if vol == nil then
+                    error("unexpected amixer output: last line invalid, volume expected")
+                end
 
-				vol = tonumber(vol)
-				assert(vol, "unexpected amixer output: volume is not a number")
+                vol = tonumber(vol)
+                assert(vol, "unexpected amixer output: volume is not a number")
 
-				local mute
-				if mutestr == "on" then mute = false
-				elseif mutestr == "off" then mute = true
-				else error("unexpected mute state: "..mutestr) end
+                local mute
+                if mutestr == "on" then mute = false
+                elseif mutestr == "off" then mute = true
+                else error("unexpected mute state: "..mutestr) end
 
-				-- set vol to min on mute, because it still has the unmuted value
-				local prefix = prefix
-				if mute then
-					vol = min
-					prefix = muteprefix
-				end
+                -- set vol to min on mute, because it still has the unmuted value
+                local prefix = prefix
+                if mute then
+                    vol = min
+                    prefix = muteprefix
+                end
 
-				local pct = (vol-min) / (max-min)
-				local color = util.colorval(colors, pct)
+                local pct = (vol-min) / (max-min)
+                local color = util.colorval(colors, pct)
 
-				-- support prefixes/postfixes generated by a custom function
-				if type(prefix) == "function" then prefix = prefix() end
-				if type(postfix) == "function" then postfix = postfix() end
+                -- support prefixes/postfixes generated by a custom function
+                if type(prefix) == "function" then prefix = prefix() end
+                if type(postfix) == "function" then postfix = postfix() end
 
-				util.print(prefix, nil, false)
-				util.print(util.bar({
-					pct = pct,
-					width = barwidth,
-					fillsym = fillsym,
-					emptysym = emptysym,
-				}), color, false)
-				util.print(postfix)
-			end,
-			clickevent = function(e)
-				--[[
+                util.print(prefix, nil, false)
+                util.print(util.bar({
+                    pct = pct,
+                    width = barwidth,
+                    fillsym = fillsym,
+                    emptysym = emptysym,
+                }), color, false)
+                util.print(postfix)
+            end,
+            clickevent = function(e)
+                --[[
 
-				Mouse button codes:
-				1 - Left
-				2 - Middle
-				3 - Right
-				4 - Wheel up
-				5 - Wheel down
+                Mouse button codes:
+                1 - Left
+                2 - Middle
+                3 - Right
+                4 - Wheel up
+                5 - Wheel down
 
-				8 - Back
-				9 - Forward
+                8 - Back
+                9 - Forward
 
-				]]
+                ]]
 
-				local btntbl = {
-					[1] = function()
-						-- Toggle mute on left click
-						os.execute("amixer -q set \""..item.."\" toggle")
-					end,
-					[4] = function()
-						-- Increase volume when scrolling up
-						os.execute("amixer -q set \""..item.."\" "..scrollvol.."+ unmute")
-					end,
-					[5] = function()
-						-- Decrease volume when scrolling down
-						os.execute("amixer -q set \""..item.."\" "..scrollvol.."- unmute")
-					end,
-				}
+                local btntbl = {
+                    [1] = function()
+                        -- Toggle mute on left click
+                        os.execute("amixer -q set \""..item.."\" toggle")
+                    end,
+                    [4] = function()
+                        -- Increase volume when scrolling up
+                        os.execute("amixer -q set \""..item.."\" "..scrollvol.."+ unmute")
+                    end,
+                    [5] = function()
+                        -- Decrease volume when scrolling down
+                        os.execute("amixer -q set \""..item.."\" "..scrollvol.."- unmute")
+                    end,
+                }
 
-				local fn = btntbl[e.button]
-				if fn then fn() end
-			end,
-		}
-	end,
+                local fn = btntbl[e.button]
+                if fn then fn() end
+            end,
+        }
+    end,
 }
