@@ -24,7 +24,7 @@ do
         -- SIGUSR1 to force a refresh (like i3status)
         sig.signal(sig.SIGUSR1, function() end)
 
-        -- If we can get the script directory, add is as a package search path
+        -- If we can get the script directory, add it as a package search path
         local scriptdir = arg[0]:match("(.*)/.*")
         if scriptdir then package.path = package.path..";"..scriptdir.."/?.lua" end
 
@@ -149,7 +149,19 @@ local function updatestatus()
         local ty = type(elem)
         local f = typedispatch[ty]
         if f then
-            local success, msg = pcall(f, elem)
+            -- Try up to 5 times to prevent sporadic errors caused by interrupted syscalls
+            local success, msg
+            for try = 0, 5 do
+                success, msg = pcall(f, elem)
+                if success then
+                    break
+                end
+
+                io.stderr:write(string.format("failed to update module #%d (try #%d): %s\n",
+                    i, try, msg))
+            end
+
+            -- If the module still fails after 5 tries, we display an error in the status bar
             if not success then
                 if msg then msg = "error: "..msg else msg = "unknown error" end
                 util.print(msg, colred and util.colors.red or nil, nil, true)
