@@ -21,8 +21,8 @@ return {
         cfg = cfg or {}
 
         local host = cfg.host or false
-        local playprefix = cfg.playprefix or "⏵ "
-        local pauseprefix = cfg.pauseprefix or "⏸ "
+        local playprefix = cfg.playprefix or "▶ "
+        local pauseprefix = cfg.pauseprefix or "❙❙ "
         local stopstr = cfg.stopstr or "⏹ Not playing"
         local nompdstr = cfg.nompdstr or "MPD is not running!"
         local formatter = cfg.formatter or function(tbl)
